@@ -1,30 +1,135 @@
-from __future__ import annotations
-
-import json
-import random
-from pathlib import Path
-
-import numpy as np
-import torch
-
-
-def set_seed(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.benchmark = False
-    torch.backends.cudnn.deterministic = True
-
-
-def save_json(data: dict, path: str | Path) -> None:
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-
-
-def device_from_arg(name: str) -> torch.device:
-    if name == "auto":
-        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    return torch.device(name)
+{
+  "bibimbap": {
+    "precision": 0.9404761904761905,
+    "recall": 0.948,
+    "f1-score": 0.9442231075697212,
+    "support": 250.0
+  },
+  "chicken_curry": {
+    "precision": 0.8816326530612245,
+    "recall": 0.864,
+    "f1-score": 0.8727272727272727,
+    "support": 250.0
+  },
+  "dumplings": {
+    "precision": 0.9230769230769231,
+    "recall": 0.912,
+    "f1-score": 0.9175050301810865,
+    "support": 250.0
+  },
+  "edamame": {
+    "precision": 1.0,
+    "recall": 0.992,
+    "f1-score": 0.9959839357429718,
+    "support": 250.0
+  },
+  "falafel": {
+    "precision": 0.9108527131782945,
+    "recall": 0.94,
+    "f1-score": 0.9251968503937008,
+    "support": 250.0
+  },
+  "fried_rice": {
+    "precision": 0.9407114624505929,
+    "recall": 0.952,
+    "f1-score": 0.9463220675944334,
+    "support": 250.0
+  },
+  "gyoza": {
+    "precision": 0.9036144578313253,
+    "recall": 0.9,
+    "f1-score": 0.9018036072144289,
+    "support": 250.0
+  },
+  "hot_and_sour_soup": {
+    "precision": 0.9365079365079365,
+    "recall": 0.944,
+    "f1-score": 0.9402390438247012,
+    "support": 250.0
+  },
+  "hummus": {
+    "precision": 0.8897338403041825,
+    "recall": 0.936,
+    "f1-score": 0.9122807017543859,
+    "support": 250.0
+  },
+  "miso_soup": {
+    "precision": 0.963265306122449,
+    "recall": 0.944,
+    "f1-score": 0.9535353535353536,
+    "support": 250.0
+  },
+  "pad_thai": {
+    "precision": 0.9302325581395349,
+    "recall": 0.96,
+    "f1-score": 0.9448818897637795,
+    "support": 250.0
+  },
+  "peking_duck": {
+    "precision": 0.9346938775510204,
+    "recall": 0.916,
+    "f1-score": 0.9252525252525252,
+    "support": 250.0
+  },
+  "pho": {
+    "precision": 0.9031007751937985,
+    "recall": 0.932,
+    "f1-score": 0.9173228346456693,
+    "support": 250.0
+  },
+  "ramen": {
+    "precision": 0.9117647058823529,
+    "recall": 0.868,
+    "f1-score": 0.889344262295082,
+    "support": 250.0
+  },
+  "samosa": {
+    "precision": 0.889795918367347,
+    "recall": 0.872,
+    "f1-score": 0.8808080808080808,
+    "support": 250.0
+  },
+  "sashimi": {
+    "precision": 0.9626556016597511,
+    "recall": 0.928,
+    "f1-score": 0.945010183299389,
+    "support": 250.0
+  },
+  "seaweed_salad": {
+    "precision": 0.9558232931726908,
+    "recall": 0.952,
+    "f1-score": 0.9539078156312625,
+    "support": 250.0
+  },
+  "spring_rolls": {
+    "precision": 0.8968253968253969,
+    "recall": 0.904,
+    "f1-score": 0.900398406374502,
+    "support": 250.0
+  },
+  "sushi": {
+    "precision": 0.9387755102040817,
+    "recall": 0.92,
+    "f1-score": 0.9292929292929293,
+    "support": 250.0
+  },
+  "takoyaki": {
+    "precision": 0.9299610894941635,
+    "recall": 0.956,
+    "f1-score": 0.9428007889546351,
+    "support": 250.0
+  },
+  "accuracy": 0.927,
+  "macro avg": {
+    "precision": 0.9271750104749629,
+    "recall": 0.9270000000000002,
+    "f1-score": 0.9269418343427956,
+    "support": 5000.0
+  },
+  "weighted avg": {
+    "precision": 0.927175010474963,
+    "recall": 0.927,
+    "f1-score": 0.9269418343427956,
+    "support": 5000.0
+  }
+}

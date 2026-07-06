@@ -1,80 +1,20 @@
-from __future__ import annotations
-
-import argparse
-from pathlib import Path
-
-import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
-import torch
-from sklearn.metrics import classification_report, confusion_matrix
-from torch.utils.data import DataLoader
-from tqdm import tqdm
-
-from src.food101_subset import Food101Subset
-from src.models import build_model
-from src.transforms import eval_transforms
-from src.utils import device_from_arg, save_json
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Evaluate a trained Food-101 1B model.")
-    parser.add_argument("--checkpoint", required=True)
-    parser.add_argument("--data-root", default="data")
-    parser.add_argument("--batch-size", type=int, default=64)
-    parser.add_argument("--num-workers", type=int, default=4)
-    parser.add_argument("--device", default="auto")
-    parser.add_argument("--out-dir", default="outputs/eval")
-    return parser.parse_args()
-
-
-def main() -> None:
-    args = parse_args()
-    device = device_from_arg(args.device)
-    ckpt = torch.load(args.checkpoint, map_location=device)
-    classes = ckpt["classes"]
-    model_name = ckpt["model_name"]
-    image_size = ckpt.get("image_size", 224)
-
-    dataset = Food101Subset(
-        args.data_root,
-        split="test",
-        classes=classes,
-        transform=eval_transforms(image_size),
-        download=False,
-    )
-    loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
-    model = build_model(model_name, len(classes), pretrained=False).to(device)
-    model.load_state_dict(ckpt["model"])
-    model.eval()
-
-    y_true, y_pred = [], []
-    with torch.no_grad():
-        for images, labels in tqdm(loader):
-            images = images.to(device)
-            logits = model(images)
-            y_true.extend(labels.numpy().tolist())
-            y_pred.extend(logits.argmax(1).cpu().numpy().tolist())
-
-    out_dir = Path(args.out_dir) / model_name
-    out_dir.mkdir(parents=True, exist_ok=True)
-    report = classification_report(y_true, y_pred, target_names=classes, output_dict=True, zero_division=0)
-    save_json(report, out_dir / "classification_report.json")
-
-    cm = confusion_matrix(y_true, y_pred, labels=list(range(len(classes))))
-    np.savetxt(out_dir / "confusion_matrix.csv", cm, delimiter=",", fmt="%d")
-    plt.figure(figsize=(13, 11))
-    sns.heatmap(cm, xticklabels=classes, yticklabels=classes, cmap="Blues", square=True, cbar=True)
-    plt.xlabel("Predicted")
-    plt.ylabel("True")
-    plt.title(f"Food-101 1B Confusion Matrix - {model_name}")
-    plt.xticks(rotation=60, ha="right", fontsize=8)
-    plt.yticks(rotation=0, fontsize=8)
-    plt.tight_layout()
-    plt.savefig(out_dir / "confusion_matrix.png", dpi=220)
-    print(f"accuracy={report['accuracy']:.4f}")
-    print(f"saved to {out_dir}")
-
-
-if __name__ == "__main__":
-    main()
+141,3,5,0,14,22,1,3,6,2,11,7,6,8,0,0,7,1,5,8
+2,100,9,0,2,8,2,36,8,8,14,19,8,6,6,12,0,6,0,4
+0,1,190,8,1,1,7,2,3,12,0,5,3,1,9,2,0,5,0,0
+1,0,3,223,1,0,2,0,0,8,1,1,3,0,0,0,4,1,2,0
+10,6,18,1,125,3,1,9,7,2,14,16,6,3,4,2,5,4,7,7
+5,5,11,0,3,149,2,2,9,0,44,1,4,3,1,0,2,3,3,3
+6,16,32,6,7,3,59,19,7,9,6,13,5,14,22,0,0,7,4,15
+1,12,4,1,1,0,2,208,0,2,2,5,6,1,2,1,0,1,0,1
+3,7,40,1,6,33,8,7,44,13,7,4,14,18,8,6,2,8,12,9
+0,1,11,2,0,0,1,14,0,179,0,3,4,16,6,6,3,4,0,0
+10,6,0,0,3,48,2,2,0,0,161,0,5,2,2,0,2,0,2,5
+2,12,10,1,14,0,1,12,2,8,3,160,1,2,9,3,0,2,1,7
+5,2,3,2,5,6,0,12,2,3,1,0,184,14,0,1,7,0,2,1
+6,21,3,3,4,7,3,15,4,15,9,5,31,102,0,4,8,0,5,5
+4,16,32,1,8,3,8,18,2,22,3,8,2,2,83,3,0,29,3,3
+7,13,5,1,6,1,1,2,2,17,1,6,8,7,3,143,3,5,17,2
+6,0,1,7,8,0,0,0,0,3,0,1,4,3,0,5,209,2,0,1
+4,12,38,6,4,2,6,14,6,34,2,11,5,5,29,11,1,52,6,2
+20,5,11,3,15,10,4,0,5,7,8,10,8,3,5,24,0,8,97,7
+19,14,5,2,18,9,5,8,1,0,40,23,12,7,8,1,5,2,4,67
