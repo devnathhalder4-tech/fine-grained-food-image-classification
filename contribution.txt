@@ -1,0 +1,31 @@
+成员分工说明
+
+项目名称：细粒度食物图像分类系统
+题目：题目一 1B组 Food-101 亚洲主食类细粒度分类
+
+成员 A：数据集与预处理
+- 负责 Food-101 数据集下载与目录检查
+- 负责 1B 组 20 类亚洲主食类别筛选
+- 负责数据增强策略设计，包括随机裁剪、翻转、颜色抖动和旋转
+
+成员 B：模型训练
+- 负责 ResNet-18 与 MobileNet-V2 训练
+- 负责训练参数设置，包括 batch size、epoch、学习率和优化器
+- 负责保存模型权重和训练历史
+
+成员 C：自定义模型与对照实验
+- 负责 Shallow-CNN 模型设计与实现
+- 负责无预训练模型对照实验
+- 负责分析浅层网络欠拟合原因
+
+成员 D：评估与可视化分析
+- 负责运行 evaluate.py 生成 classification_report 和 confusion_matrix
+- 负责对比三种模型 Accuracy 和 Macro-F1
+- 负责分析 ramen/pho、sushi/sashimi、dumplings/gyoza 等易混类别
+
+成员 E：扩展挑战与文档整理
+- 负责 Grad-CAM 可视化实验
+- 负责 Streamlit Web Demo 实现与 Colab 展示
+- 负责 README、实验报告、PDF 报告和 GitHub 仓库整理
+
+说明：若实际小组成员姓名不同，可在提交前将“成员 A-E”替换为真实姓名。
